@@ -50,6 +50,7 @@ Abandonei a divisão aleatória convencional (*K-Fold* ou *Random Split*), que f
 
 ### Mitigação do Desbalanceamento de Classes
 A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro:
+
 $$\text{scale\_pos\_weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
 
 <p align="center">
@@ -87,7 +88,7 @@ Para mitigar o comportamento de "caixa-preta" (*black box*) do algoritmo LightGB
 
 1. **Clonar o Repositório**:
    ```bash
-   git clone https://github.com/seu-usuario/datarisk-credit-default-prediction.git
+   git clone https://github.com/xjonathansilva/datarisk-credit-default-prediction.git
    cd datarisk-credit-default-prediction
 Instalar Dependências: Instale o ambiente virtual reproduzível listado no requirements.txt:
 pip install -r requirements.txt
