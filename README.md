@@ -23,6 +23,19 @@ O desenvolvimento seguiu o framework metodológico **CRISP-DM**, integrando de f
 3.  **Base de Pagamentos - Desenvolvimento** (`base_pagamentos_desenvolvimento.csv`): Histórico transacional completo de pagamentos e datas de liquidação real.
 4.  **Base de Pagamentos - Teste** (`base_pagamentos_teste.csv`): Base de validação cega para simulação em ambiente produtivo.
 
+### 📋 Dicionário de Variáveis Principais
+
+| Variável | Tipo | Descrição | Origem |
+| :--- | :---: | :--- | :--- |
+| `ID_CLIENTE` | Alfanumérico | Chave primária de identificação única do tomador de crédito. | Todas as bases |
+| `SAFRA_REF` | Data (YYYY-MM) | Safra de referência mensal do registro comportamental. | Todas as bases |
+| `VALOR_A_PAGAR` | Numérico (R$) | Valor nominal do título de crédito emitido. | Base Pagamentos |
+| `TAXA` | Numérico (%) | Taxa de juros aplicada à transação de crédito. | Base Pagamentos |
+| `DIAS_EMISSAO_VENCIMENTO` | Inteiro | Prazo total em dias concedido para o pagamento do título. | Atributo Calculado |
+| `TEMPO_DE_CLIENTE_DIAS` | Inteiro | Tempo de relacionamento do cliente com a instituição em dias. | Feature Engineering |
+| `HIST_TAXA_INADIMPLENCIA` | Numérico (%) | Percentual histórico de títulos inadimplidos (atraso >= 5 dias) do cliente. | Feature Engineering (Lag) |
+| `INADIMPLENTE` | Binário (0 ou 1) | Variável Alvo (*Target*). Indica se houve atraso igual ou superior a 5 dias. | Variável Alvo |
+
 ### Pré-processamento Modular
 Para preservar a integridade estatística, adotou-se uma estratégia de limpeza e tratamento individualizada em cada base antes da junção (*merge*) via chave primária `ID_CLIENTE` e referência temporal `SAFRA_REF`. Esse procedimento evitou que a duplicação de registros distorcesse as medidas de tendência central.
 *   **Imputação por Mediana:** Utilizada para preencher dados ausentes em variáveis numéricas assimétricas (como renda e funcionários), neutralizando o viés gerado por *outliers*.
@@ -49,9 +62,7 @@ Para garantir que o modelo não utilizasse informações futuras para prever o p
 Abandonei a divisão aleatória convencional (*K-Fold* ou *Random Split*), que falha em simular o comportamento de modelos no tempo em cenários de crédito. Reservei os **2 meses mais recentes da safra** para validação cega, simulando fielmente a performance do algoritmo em ambiente real de produção.
 
 ### Mitigação do Desbalanceamento de Classes
-A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro: Scale pos Weight
-
-Para compensar o desbalanceamento severo, configurou-se o peso das classes na função de perda:
+A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), para compensar o desbalanceamento severo, configurou-se o peso das classes na função de perda:
 
 $$w_{\text{positivo}} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
 
