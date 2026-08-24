@@ -50,9 +50,15 @@ Abandonei a divisão aleatória convencional (*K-Fold* ou *Random Split*), que f
 
 ### Mitigação do Desbalanceamento de Classes
 A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro:
-$$\text{scale\_pos\_weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
+" $$\text{scale\_pos\_weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$ "
+<p align="center">
+  <img src="notebooks/images/distribuicao_target.png" alt="Distribuição da Variável Alvo" width="500">
+</p>
 
 ### Tabela de Benchmark de Performance (Métrica AUC-ROC)
+<p align="center">
+  <img src="notebooks/images/curva_roc.png" alt="Curva ROC de Validação" width="500">
+</p>
 
 | Modelo Preditivo | AUC-ROC na Validação | Características Técnicas de Treinamento |
 | :--- | :---: | :--- |
@@ -64,6 +70,11 @@ $$\text{scale\_pos\_weight} = \frac{\text{Contagem de Registros Negativos (Adimp
 
 ## 🧩 5. Explicabilidade Global e Local (XAI via SHAP)
 Para mitigar o comportamento de "caixa-preta" (*black box*) do algoritmo LightGBM e atender a critérios rígidos de governança e transparência de crédito, apliquei o método **SHAP (SHapley Additive exPlanations)**, fundamentado na Teoria dos Jogos Cooperativos.
+<p align="center">
+  <img src="notebooks/images/feature_importance.png" alt="Importância Global das Features" width="45%">
+  <img src="notebooks/images/shap_summary.png" alt="SHAP Summary Plot" width="45%">
+</p>
+
 
 ### Principais Determinantes de Risco Decifrados:
 1.  **`HIST_TAXA_INADIMPLENCIA`**: Valores históricos de atraso elevados exercem o maior impacto marginal positivo, empurrando a probabilidade de score de risco para cima.
