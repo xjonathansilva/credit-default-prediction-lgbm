@@ -51,7 +51,7 @@ Abandonei a divisão aleatória convencional (*K-Fold* ou *Random Split*), que f
 ### Mitigação do Desbalanceamento de Classes
 A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro:
 
-$$\text{scale\_pos\_weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
+$$\text{scale\textunderscore pos\textunderscore weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
 
 <p align="center">
   <img src="notebooks/images/distribuicao_target.png" alt="Distribuição da Variável Alvo" width="500">
