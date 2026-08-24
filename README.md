@@ -49,10 +49,13 @@ Para garantir que o modelo não utilizasse informações futuras para prever o p
 Abandonei a divisão aleatória convencional (*K-Fold* ou *Random Split*), que falha em simular o comportamento de modelos no tempo em cenários de crédito. Reservei os **2 meses mais recentes da safra** para validação cega, simulando fielmente a performance do algoritmo em ambiente real de produção.
 
 ### Mitigação do Desbalanceamento de Classes
-A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro:
+A análise exploratória (EDA) diagnosticou um desbalanceamento severo: apenas **7,02% das transações eram inadimplentes**. Em vez de aplicar reamostragens artificiais (como SMOTE), configurei o ajuste nativo no LightGBM através do parâmetro: Scale pos Weight
 
-$$\text{scale\textunderscore pos\textunderscore weight} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
+Para compensar o desbalanceamento severo, configurou-se o peso das classes na função de perda:
 
+$$w_{\text{positivo}} = \frac{\text{Contagem de Registros Negativos (Adimplentes)}}{\text{Contagem de Registros Positivos (Inadimplentes)}}$$
+
+Onde $w_{\text{positivo}}$ representa o valor atribuído ao parâmetro `scale_pos_weight` no LightGBM.
 <p align="center">
   <img src="notebooks/images/distribuicao_target.png" alt="Distribuição da Variável Alvo" width="500">
 </p>
